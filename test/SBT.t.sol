@@ -13,34 +13,42 @@ contract SBTTest is Test {
     address public owner;
     address public receiver1;
     address public receiver2;
+    address public withPaperMinter;
 
     function setUp() public {
         token = new SBT("SBT Test", "TEST");
-        owner = msg.sender;
+        owner = address(this);
         receiver1 = makeAddr("receiver1");
         receiver2 = makeAddr("receiver2");
+        withPaperMinter = makeAddr("withPaperMinter");
+
+        token.setWithPaperAddress(withPaperMinter, true);
     }
 
     function testMint() external {
-        vm.prank(receiver1);
-        token.mint();
+        vm.prank(withPaperMinter);
+        token.mint(receiver1);
         require(token.balanceOf(receiver1) == 1, "Invalid token balance after mint");
         require(token.ownerOf(1) == receiver1, "Wrong token minted");
 
-        vm.prank(receiver2);
-        token.mint();
+        vm.prank(withPaperMinter);
+        token.mint(receiver2);
         require(token.balanceOf(receiver2) == 1, "Invalid token balance after mint");
         require(token.ownerOf(2) == receiver2, "Wrong token minted");
 
-        vm.prank(receiver1);
-        token.mint();
+        vm.prank(owner);
+        token.mint(receiver1);
         require(token.balanceOf(receiver1) == 2, "Invalid token balance after mint");
         require(token.ownerOf(3) == receiver1, "Wrong token minted");
+
+        vm.prank(receiver1);
+        vm.expectRevert("SBT: Address is not a withPaper wallet or contract owner.");
+        token.mint(receiver1);
     }
 
     function testBurn() external {
-        vm.prank(receiver1);
-        token.mint();
+        vm.prank(withPaperMinter);
+        token.mint(receiver1);
 
         vm.prank(receiver1);
         token.burn(1);
