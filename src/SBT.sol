@@ -15,6 +15,8 @@ contract SBT is ERC5192, WithPaperHandler, Ownable {
     /// See https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Counters.sol
     Counters.Counter private _tokenSupply;
 
+    string private _tokenURI;
+
     modifier withPaperOrOwnerOnly(address addr) {
         require(
             addr == owner() || checkWithPaperAddress(addr), "SBT: Address is not a withPaper wallet or contract owner."
@@ -48,5 +50,21 @@ contract SBT is ERC5192, WithPaperHandler, Ownable {
         //     So no need to check them
         require(ownerOf(tokenId) == msg.sender, "SBT: Only owner of token can burn.");
         _burn(tokenId);
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return _tokenURI;
+    }
+
+    function setBaseURI(string memory tokenURI_) external onlyOwner {
+        _tokenURI = tokenURI_;
+    }
+
+    function tokenURI(uint256 tokenId) public view virtual override returns (string memory) {
+        _requireMinted(tokenId);
+
+        string memory baseURI = _baseURI();
+        // All tokens are the same ; there is only one valid URI for token metadata
+        return bytes(baseURI).length > 0 ? baseURI : "";
     }
 }

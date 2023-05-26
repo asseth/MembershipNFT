@@ -5,6 +5,7 @@ pragma solidity ^0.8.13;
 import {Test} from "forge-std/Test.sol";
 import {ERC5192} from "ERC5192/ERC5192.sol";
 
+import {Utils} from "./Utils.sol";
 import {SBT} from "../src/SBT.sol";
 
 contract SBTTest is Test {
@@ -60,5 +61,17 @@ contract SBTTest is Test {
         // NB: even with no existing token, transfer should be locked
         vm.expectRevert(ERC5192.ErrLocked.selector);
         token.transferFrom(receiver1, receiver2, 1);
+    }
+
+    function testtokenURI() external {
+        vm.expectRevert("ERC721: invalid token ID");
+        token.tokenURI(1);
+
+        vm.prank(withPaperMinter);
+        token.mint(receiver1);
+
+        require(Utils.compareStrings(token.tokenURI(1), ""));
+        token.setBaseURI("ipfs://test.json");
+        require(Utils.compareStrings(token.tokenURI(1), "ipfs://test.json"));
     }
 }
