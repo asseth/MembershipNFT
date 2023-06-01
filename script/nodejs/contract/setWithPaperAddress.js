@@ -7,8 +7,9 @@
 
 const ethers = require('ethers');
 const contractBuild = require("../../../out/SBT.sol/SBT.json")
+const path = require('node:path');
 
-require('dotenv').config()
+require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
 
 async function setWithPaperAddress(rpcUrl, contractAddress, withPaperAddress) {
     // Create a provider (the connection to the blockchain network)

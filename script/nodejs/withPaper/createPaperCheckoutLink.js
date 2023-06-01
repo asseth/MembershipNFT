@@ -4,9 +4,10 @@
 // PAPER_API_KEY: the API key to connect to your withpaper.com account.
 // PAPER_CONTRACT_ID: the Identifier given after registering the contract on the withpaper.com dashboard.
 
-require('dotenv').config()
+const path = require('node:path');
 
-async function createPaperCheckoutLink(paperContractID) {
+require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
+
     if (!process.env.PAPER_API_KEY) {
         throw new Error("You must define PAPER_API_KEY in a .env file.");
     }

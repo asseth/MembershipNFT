@@ -6,8 +6,9 @@
 // PAPER_CONTRACT_ID: the Identifier given after registering the contract on the withpaper.com dashboard.
 
 const contractBuild = require("../../../out/SBT.sol/SBT.json")
+const path = require('node:path');
 
-require('dotenv').config()
+require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
 
 async function registerContractInPaper(chain, contractAddress) {
     if (!process.env.PAPER_API_KEY) {
@@ -23,7 +24,6 @@ async function registerContractInPaper(chain, contractAddress) {
             "accept": 'application/json',
             "Content-Type": 'application/json',
         },
-        // todo: personalize the checkout content (title, description, ...)
         body: JSON.stringify({
             "chain": chain,
             "contractAddress": contractAddress,
