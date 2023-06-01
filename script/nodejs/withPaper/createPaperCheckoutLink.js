@@ -2,14 +2,18 @@
 //
 // required variable in .env file:
 // PAPER_API_KEY: the API key to connect to your withpaper.com account.
-// PAPER_CONTRACT_ID: the Identifier given after registering the contract on the withpaper.com dashboard.
 
 const path = require('node:path');
 
 require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
 
+async function createPaperCheckoutLink(paperContractID, currency) {
     if (!process.env.PAPER_API_KEY) {
         throw new Error("You must define PAPER_API_KEY in a .env file.");
+    }
+
+    if (currency != "ETH" && currency != "MATIC") {
+        throw new Error("You must use ETH or MATIC.");
     }
 
     value = await fetch("https://withpaper.com/api/2022-08-12/checkout-link-intent", {
@@ -32,7 +36,7 @@ require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
             "mintMethod": {
                 "name": "mint",
                 "args": { "to": "$WALLET" },
-                "payment": { "currency": "MATIC", "value": "0 * $QUANTITY" }
+                "payment": { "currency": currency, "value": "0 * $QUANTITY" }
             },
             "feeBearer": "SELLER",
             "hideNativeMint": true,
@@ -52,12 +56,18 @@ require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
 }
 
 async function main() {
-    if (!process.env.PAPER_CONTRACT_ID) {
-        console.error("No withPaper.com contract ID set in .env file.");
-        return;
+    function printHelp() {
+        console.log("usage:");
+        console.log("node createPaperCheckoutLink.js <PAPER_CONTRACT_ID> <CURRENCY>\n");
+        console.log("Currency:");
+        console.log("ETH, MATIC");
     }
 
-    console.dir(await createPaperCheckoutLink(process.env.PAPER_CONTRACT_ID), { depth: null });
+    if (process.argv.length != 4) {
+        printHelp();
+        return;
+    }
+    console.dir(await createPaperCheckoutLink(process.argv[2], process.argv[3]), { depth: null });
 }
 
 if (require.main === module) {

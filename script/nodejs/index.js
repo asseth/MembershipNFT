@@ -53,7 +53,7 @@ async function setup(network) {
     console.dir(registration, { depth: 1 });
 
     // Create a checkout link (for testing purpose)
-    console.dir(await createPaperCheckoutLink(registration.contractId), { depth: null });
+    console.dir(await createPaperCheckoutLink(registration.contractId, "MATIC"), { depth: null });
 }
 
 async function main() {
