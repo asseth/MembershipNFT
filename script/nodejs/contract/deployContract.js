@@ -21,7 +21,8 @@ async function deploy(rpcUrl) {
     // Create the factory instance to deploy the SBT contract
     const factory = new ethers.ContractFactory(contractBuild.abi, contractBuild.bytecode).connect(signer);
 
-    const contract = await factory.deploy("SBT name1", "SBT Symbol1", { gasPrice: ethers.parseUnits("50", "gwei") });
+    // Deploy the contract
+    const contract = await factory.deploy("SBT name1", "SBT Symbol1", { gasPrice: ethers.parseUnits("5", "gwei") });
 
     return await contract.getAddress();
 }
@@ -39,6 +40,7 @@ async function main() {
     const rpcs = [
         "https://polygon-rpc.com",
         "https://polygon-mumbai-bor.publicnode.com",
+        "https://ethereum-goerli.publicnode.com",
         "http://127.0.0.1:8545"
     ];
 
@@ -47,15 +49,20 @@ async function main() {
         return;
     }
 
+    let address;
     if (process.argv[2] == "polygon")
-        await deploy(rpcs[0]);
+        address = await deploy(rpcs[0]);
     else if (process.argv[2] == "mumbai")
-        await deploy(rpcs[1]);
+        address = await deploy(rpcs[1]);
+    else if (process.argv[2] == "goerli")
+        address = await deploy(rpcs[2]);
     else if (process.argv[2] == "local")
-        await deploy(rpcs[2]);
+        address = await deploy(rpcs[3]);
     else {
         printHelp();
+        return;
     }
+    console.log("new contract address: " + address)
 }
 
 if (require.main === module) {

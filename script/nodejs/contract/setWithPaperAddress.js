@@ -22,7 +22,7 @@ async function setWithPaperAddress(rpcUrl, contractAddress, withPaperAddress) {
     const contract = new ethers.Contract(contractAddress, contractBuild.abi).connect(signer);
 
     // Add withPaper address to the contract (change seond parameter to 'false' to remove the address from the contract)
-    const tx = await contract.setWithPaperAddress(withPaperAddress, true, { gasPrice: ethers.parseUnits("40", "gwei") });
+    const tx = await contract.setWithPaperAddress(withPaperAddress, true, { gasPrice: ethers.parseUnits("5", "gwei") });
 
     return await tx.wait();
 
@@ -42,6 +42,7 @@ async function main() {
     const rpcs = [
         "https://polygon-rpc.com",
         "https://polygon-mumbai-bor.publicnode.com",
+        "https://ethereum-goerli.publicnode.com",
         "http://127.0.0.1:8545"
     ];
 
@@ -50,15 +51,20 @@ async function main() {
         return;
     }
 
+    let txReceipt;
     if (process.argv[2] == "polygon")
-        await setWithPaperAddress(rpcs[0], process.argv[3], process.argv[4]);
+        txReceipt = await setWithPaperAddress(rpcs[0], process.argv[3], process.argv[4]);
     else if (process.argv[2] == "mumbai")
-        await setWithPaperAddress(rpcs[1], process.argv[3], process.argv[4]);
+        txReceipt = await setWithPaperAddress(rpcs[1], process.argv[3], process.argv[4]);
+    else if (process.argv[2] == "goerli")
+        txReceipt = await setWithPaperAddress(rpcs[2], process.argv[3], process.argv[4]);
     else if (process.argv[2] == "local")
-        await setWithPaperAddress(rpcs[2], process.argv[3], process.argv[4]);
+        txReceipt = await setWithPaperAddress(rpcs[3], process.argv[3], process.argv[4]);
     else {
         printHelp();
+        return;
     }
+    console.dir(txReceipt, { depth: null });
 }
 
 if (require.main === module) {
