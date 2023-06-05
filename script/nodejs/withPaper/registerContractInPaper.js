@@ -3,7 +3,6 @@
 //
 // required variable in .env file:
 // PAPER_API_KEY: the API key to connect to your withpaper.com account.
-// PAPER_CONTRACT_ID: the Identifier given after registering the contract on the withpaper.com dashboard.
 
 const contractBuild = require("../../../out/SBT.sol/SBT.json")
 const path = require('node:path');
