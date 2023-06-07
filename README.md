@@ -51,6 +51,10 @@ forge test
 # export contract code
 forge flatten src/SBT.sol
 
+# Build & host locally the contract documentation
+forge doc --build
+forge doc --serve
+
 
 ### custom scripts ###
 # NB: you can always run a script without argument to print the usage.
