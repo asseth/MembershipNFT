@@ -23,13 +23,13 @@ async function createPaperCheckoutLink(paperContractID, currency) {
             "accept": 'application/json',
             "Content-Type": 'application/json',
         },
-        // todo: personalize the checkout content (title, description, ...)
+        // personalize the checkout content here (title, description, ...)
         body: JSON.stringify({
             "contractId": paperContractID.toString(),
-            "title": "test",
-            "description": "Zapier test",
+            "title": "MembershipNFT",
+            "description": "Mint your Ethereum France membership Soulbound Token!",
             "imageUrl": "https://unsplash.it/240/240",
-            "expiresInMinutes": 15,
+            "expiresInMinutes": 60 * 24 * 30,
             "limitPerTransaction": 1,
             "quantity": 1,
             "redirectAfterPayment": false,
