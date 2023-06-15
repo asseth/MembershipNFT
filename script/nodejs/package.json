@@ -1,0 +1,12 @@
+{
+  "name": "script-node.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "",
+  "author": "Jh",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "ethers": "^6.4.0"
+  }
+}
