@@ -41,9 +41,11 @@ Also, remember to clone the submodules as you initialize this repo, either by ad
 
 To use the nodejs scripts, you will need environment variables filled in a `.env` file in the `script/nodejs/` folder. See the [`.env.template`](./script/nodejs/.env.template) file for more informations.
 
+Please note that all blockchain interactions (contract deployment and transactions) use a wallet **whose private key is provided in a .env file**. I recommend using a burner wallet to avoid leaking and compromising your wallet.
+
 ```bash
 ### forge examples ###
-# build the contract
+# build the contract (you can find the ABI and other data in the `out/` directory)
 forge build
 
 # run the tests
@@ -59,6 +61,9 @@ forge doc --serve
 
 ### custom scripts ###
 # NB: you can always run a script without argument to print the usage.
+# NB: You must install the required libraries first:
+cd script/nodejs
+npm install
 
 # deploy the contract
 cd script/nodejs
@@ -68,7 +73,7 @@ node contract/deployContract.js <NETWORK>
 cd script/nodejs
 node contract/setWithPaperAddress.js <NETWORK> <CONTRACT ADDRESS> <WITHPAPER ADDRESS>
 
-# Register a contract on withpaper.com dashboard
+# Register a contract on withpaper.com dashboard (can be down from the dashboard directly)
 cd script/nodejs
 node withPaper/registerContractInPaper.js <NETWORK> <CONTRACT ADDRESS>
 
