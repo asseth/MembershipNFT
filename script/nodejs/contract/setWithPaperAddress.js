@@ -36,6 +36,7 @@ async function main() {
         console.log("Networks:");
         console.log("polygon\t\tPolygon Mainnet");
         console.log("mumbai\t\tMumbai Testnet");
+        console.log("goerli\t\tGoerli Testnet");
         console.log("local\t\tLocal test environment");
     }
 
