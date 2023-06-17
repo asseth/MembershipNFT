@@ -99,13 +99,15 @@ the MembershipNFT is a [Soulbound](https://vitalik.ca/general/2022/01/26/soulbou
 The contract implementing this token is based on the [EIP5192](https://eips.ethereum.org/EIPS/eip-5192). It has also a [withpaper.com](https://withpaper.com/) integration, allowing the members to easily mint their token.
 
 ### About function restrictions
-The contract has certain functions restricted, for security purposes. 2 roles can be identified to explain these restrictions:
+The contract has certain functions restricted, for security purposes. 3 roles can be identified to explain these restrictions:
 - **The owner**, which is the deployer of the contract,
-- **The Minters**, which are wallets managed by withpaper.com.
+- **The minters**, which are wallets managed by withpaper.com.
+- **The members**, which are the owners of their respective SBT.
 
 Here are the restricted functions:
 - `setWithPaperAddress(address addr, bool value)` is restricted to the owner only. _NB: it will in fact give  the minter role to a new address_
 - `mint(address to)` is restricted to minters and the owner.
+- `burn(uint256 tokenId)` is restricted to the member that own the token to burn and the owner of the contract.
 - `setBaseURI(string memory tokenURI_)` is restricted to the owner only.
 
 ---
