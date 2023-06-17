@@ -11,6 +11,7 @@ MembershipNFT for Ethereum-France
       - [`script/nodejs/`](#scriptnodejs)
   - [How to use this repo?](#how-to-use-this-repo)
   - [How does it works ?](#how-does-it-works-)
+    - [About function restrictions](#about-function-restrictions)
   - [Licence](#licence)
 
 ---
@@ -45,7 +46,7 @@ Please note that all blockchain interactions (contract deployment and transactio
 
 ```bash
 ### forge examples ###
-# build the contract (you can find the ABI and other data in the `out/` directory)
+# build the contract (you will then find the ABI and other data in the `out/` directory)
 forge build
 
 # run the tests
@@ -65,13 +66,21 @@ forge doc --serve
 cd script/nodejs
 npm install
 
-# deploy the contract
+# Deploy the contract
 cd script/nodejs
 node contract/deployContract.js <NETWORK>
 
 # Add a withpaper.com wallet address to the contract
 cd script/nodejs
 node contract/setWithPaperAddress.js <NETWORK> <CONTRACT ADDRESS> <WITHPAPER ADDRESS>
+
+# Change the owner of the contract
+cd script/nodejs
+node contract/transferOwnership.js <NETWORK> <CONTRACT ADDRESS> <NEW OWNER ADDRESS>
+
+# Change the token metadata URI
+cd script/nodejs
+node contract/updateMetadata.js <NETWORK> <CONTRACT ADDRESS> <METADATA URI>
 
 # Register a contract on withpaper.com dashboard (can be down from the dashboard directly)
 cd script/nodejs
@@ -88,6 +97,16 @@ node withPaper/createPaperCheckoutLink.js <PAPER_CONTRACT_ID> <CURRENCY>
 the MembershipNFT is a [Soulbound](https://vitalik.ca/general/2022/01/26/soulbound.html) Token, or SBT, used to represent a membership to the [Ethereum France](https://www.ethereum-france.com/) association. It acts as an on-chain certificate, allowing one to access to the Ethereum France community, for example.
 
 The contract implementing this token is based on the [EIP5192](https://eips.ethereum.org/EIPS/eip-5192). It has also a [withpaper.com](https://withpaper.com/) integration, allowing the members to easily mint their token.
+
+### About function restrictions
+The contract has certain functions restricted, for security purposes. 2 roles can be identified to explain these restrictions:
+- **The owner**, which is the deployer of the contract,
+- **The Minters**, which are wallets managed by withpaper.com.
+
+Here are the restricted functions:
+- `setWithPaperAddress(address addr, bool value)` is restricted to the owner only. _NB: it will in fact give  the minter role to a new address_
+- `mint(address to)` is restricted to minters and the owner.
+- `setBaseURI(string memory tokenURI_)` is restricted to the owner only.
 
 ---
 ## Licence
