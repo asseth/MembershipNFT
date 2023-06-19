@@ -11,6 +11,7 @@ MembershipNFT for Ethereum-France
       - [`script/nodejs/`](#scriptnodejs)
   - [How to use this repo?](#how-to-use-this-repo)
   - [How does it works ?](#how-does-it-works-)
+    - [About function restrictions](#about-function-restrictions)
   - [Licence](#licence)
 
 ---
@@ -41,9 +42,11 @@ Also, remember to clone the submodules as you initialize this repo, either by ad
 
 To use the nodejs scripts, you will need environment variables filled in a `.env` file in the `script/nodejs/` folder. See the [`.env.template`](./script/nodejs/.env.template) file for more informations.
 
+Please note that all blockchain interactions (contract deployment and transactions) use a wallet **whose private key is provided in a .env file**. I recommend using a burner wallet to avoid leaking and compromising your wallet.
+
 ```bash
 ### forge examples ###
-# build the contract
+# build the contract (you will then find the ABI and other data in the `out/` directory)
 forge build
 
 # run the tests
@@ -59,8 +62,11 @@ forge doc --serve
 
 ### custom scripts ###
 # NB: you can always run a script without argument to print the usage.
+# NB: You must install the required libraries first:
+cd script/nodejs
+npm install
 
-# deploy the contract
+# Deploy the contract
 cd script/nodejs
 node contract/deployContract.js <NETWORK>
 
@@ -68,7 +74,15 @@ node contract/deployContract.js <NETWORK>
 cd script/nodejs
 node contract/setWithPaperAddress.js <NETWORK> <CONTRACT ADDRESS> <WITHPAPER ADDRESS>
 
-# Register a contract on withpaper.com dashboard
+# Change the owner of the contract
+cd script/nodejs
+node contract/transferOwnership.js <NETWORK> <CONTRACT ADDRESS> <NEW OWNER ADDRESS>
+
+# Change the token metadata URI
+cd script/nodejs
+node contract/updateMetadata.js <NETWORK> <CONTRACT ADDRESS> <METADATA URI>
+
+# Register a contract on withpaper.com dashboard (can be down from the dashboard directly)
 cd script/nodejs
 node withPaper/registerContractInPaper.js <NETWORK> <CONTRACT ADDRESS>
 
@@ -83,6 +97,18 @@ node withPaper/createPaperCheckoutLink.js <PAPER_CONTRACT_ID> <CURRENCY>
 the MembershipNFT is a [Soulbound](https://vitalik.ca/general/2022/01/26/soulbound.html) Token, or SBT, used to represent a membership to the [Ethereum France](https://www.ethereum-france.com/) association. It acts as an on-chain certificate, allowing one to access to the Ethereum France community, for example.
 
 The contract implementing this token is based on the [EIP5192](https://eips.ethereum.org/EIPS/eip-5192). It has also a [withpaper.com](https://withpaper.com/) integration, allowing the members to easily mint their token.
+
+### About function restrictions
+The contract has certain functions restricted, for security purposes. 3 roles can be identified to explain these restrictions:
+- **The owner**, which is the deployer of the contract,
+- **The minters**, which are wallets managed by withpaper.com.
+- **The members**, which are the owners of their respective SBT.
+
+Here are the restricted functions:
+- `setWithPaperAddress(address addr, bool value)` is restricted to the owner only. _NB: it will in fact give  the minter role to a new address_
+- `mint(address to)` is restricted to minters and the owner.
+- `burn(uint256 tokenId)` is restricted to the member that own the token to burn and the owner of the contract.
+- `setBaseURI(string memory tokenURI_)` is restricted to the owner only.
 
 ---
 ## Licence

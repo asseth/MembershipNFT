@@ -60,7 +60,10 @@ contract SBT is ERC5192, WithPaperHandler, Ownable {
     function burn(uint256 tokenId) public {
         // NB: No operator allowed when contract is locked
         //     So no need to check them
-        require(ownerOf(tokenId) == msg.sender, "SBT: Only owner of token can burn.");
+        require(
+            ownerOf(tokenId) == msg.sender || msg.sender == owner(),
+            "SBT: Only owner of token or contract owner can burn."
+        );
         _burn(tokenId);
     }
 

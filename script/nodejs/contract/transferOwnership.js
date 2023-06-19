@@ -1,4 +1,4 @@
-// Add a withPaper.com wallet address to the SBT contract (for minting operation)
+// Change the owner of the contract
 // NB: You MUST compile the contract first (`forge build` in the root directory)
 //
 // required variable in .env file:
@@ -11,7 +11,7 @@ const path = require('node:path');
 
 require('dotenv').config({ path: path.resolve(__dirname, "../.env") })
 
-async function setWithPaperAddress(rpcUrl, contractAddress, withPaperAddress) {
+async function transferOwnership(rpcUrl, contractAddress, newOwnerAddress) {
     // Create a provider (the connection to the blockchain network)
     const provider = new ethers.JsonRpcProvider(rpcUrl);
 
@@ -21,18 +21,16 @@ async function setWithPaperAddress(rpcUrl, contractAddress, withPaperAddress) {
     // Create the contract instance to interact with it
     const contract = new ethers.Contract(contractAddress, contractBuild.abi).connect(signer);
 
-    // Add withPaper address to the contract (change seond parameter to 'false' to remove the address from the contract)
-    const tx = await contract.setWithPaperAddress(withPaperAddress, true, { gasPrice: ethers.parseUnits("5", "gwei") });
+    // Change metadata URI in the contract (owner only)
+    const tx = await contract.transferOwnership(newOwnerAddress, { gasPrice: ethers.parseUnits("5", "gwei") });
 
     return await tx.wait();
-
-    // check the result in CLI: `cast call [--rpc-url <RPC URL>] <CONTRACT ADDRESS> "checkWithPaperAddress(address addr)" <WITHPAPER ADDRESS>`
 }
 
 async function main() {
     function printHelp() {
         console.log("usage:");
-        console.log("node setWithPaperAddress.js <NETWORK> <CONTRACT ADDRESS> <WITHPAPER ADDRESS>\n");
+        console.log("node transferOwnership.js <NETWORK> <CONTRACT ADDRESS> <NEW OWNER ADDRESS>\n");
         console.log("Networks:");
         console.log("polygon\t\tPolygon Mainnet");
         console.log("mumbai\t\tMumbai Testnet");
@@ -54,13 +52,13 @@ async function main() {
 
     let txReceipt;
     if (process.argv[2] == "polygon")
-        txReceipt = await setWithPaperAddress(rpcs[0], process.argv[3], process.argv[4]);
+        txReceipt = await transferOwnership(rpcs[0], process.argv[3], process.argv[4]);
     else if (process.argv[2] == "mumbai")
-        txReceipt = await setWithPaperAddress(rpcs[1], process.argv[3], process.argv[4]);
+        txReceipt = await transferOwnership(rpcs[1], process.argv[3], process.argv[4]);
     else if (process.argv[2] == "goerli")
-        txReceipt = await setWithPaperAddress(rpcs[2], process.argv[3], process.argv[4]);
+        txReceipt = await transferOwnership(rpcs[2], process.argv[3], process.argv[4]);
     else if (process.argv[2] == "local")
-        txReceipt = await setWithPaperAddress(rpcs[3], process.argv[3], process.argv[4]);
+        txReceipt = await transferOwnership(rpcs[3], process.argv[3], process.argv[4]);
     else {
         printHelp();
         return;
@@ -75,4 +73,4 @@ if (require.main === module) {
     });
 }
 
-exports.setWithPaperAddress = setWithPaperAddress;
+exports.transferOwnership = transferOwnership;

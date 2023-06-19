@@ -54,6 +54,13 @@ contract SBTTest is Test {
         vm.prank(receiver1);
         token.burn(1);
         require(token.balanceOf(receiver1) == 0, "Invalid token balance after burn");
+
+        vm.prank(withPaperMinter);
+        token.mint(receiver1);
+
+        vm.prank(owner);
+        token.burn(2);
+        require(token.balanceOf(receiver1) == 0, "Invalid token balance after burn");
     }
 
     function testTransfer() external {
