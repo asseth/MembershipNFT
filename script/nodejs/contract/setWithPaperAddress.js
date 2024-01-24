@@ -35,14 +35,18 @@ async function main() {
         console.log("node setWithPaperAddress.js <NETWORK> <CONTRACT ADDRESS> <WITHPAPER ADDRESS>\n");
         console.log("Networks:");
         console.log("polygon\t\tPolygon Mainnet");
+        console.log("optimism\t\tOptimism Mainnet");
         console.log("mumbai\t\tMumbai Testnet");
+        console.log("optimismSepolia\t\tOptimism Sepolia Testnet");
         console.log("goerli\t\tGoerli Testnet");
         console.log("local\t\tLocal test environment");
     }
 
     const rpcs = [
         "https://polygon-rpc.com",
+        "https://mainnet.optimism.io",
         "https://polygon-mumbai-bor.publicnode.com",
+        "https://sepolia.optimism.io",
         "https://ethereum-goerli.publicnode.com",
         "http://127.0.0.1:8545"
     ];
@@ -55,12 +59,16 @@ async function main() {
     let txReceipt;
     if (process.argv[2] == "polygon")
         txReceipt = await setWithPaperAddress(rpcs[0], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "mumbai")
+    else if (process.argv[2] == "optimism")
         txReceipt = await setWithPaperAddress(rpcs[1], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "goerli")
+    else if (process.argv[2] == "mumbai")
         txReceipt = await setWithPaperAddress(rpcs[2], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "local")
+    else if (process.argv[2] == "optimismSepolia")
         txReceipt = await setWithPaperAddress(rpcs[3], process.argv[3], process.argv[4]);
+    else if (process.argv[2] == "goerli")
+        txReceipt = await setWithPaperAddress(rpcs[4], process.argv[3], process.argv[4]);
+    else if (process.argv[2] == "local")
+        txReceipt = await setWithPaperAddress(rpcs[5], process.argv[3], process.argv[4]);
     else {
         printHelp();
         return;
