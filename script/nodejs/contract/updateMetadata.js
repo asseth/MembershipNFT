@@ -32,6 +32,8 @@ async function main() {
         console.log("usage:");
         console.log("node updateMetadata.js <NETWORK> <CONTRACT ADDRESS> <METADATA URI>\n");
         console.log("Networks:");
+	console.log("optimism\t\tOptimism mainet");
+	console.log("optimism-sepolia\t\tOptimism sepolia");
         console.log("polygon\t\tPolygon Mainnet");
         console.log("mumbai\t\tMumbai Testnet");
         console.log("goerli\t\tGoerli Testnet");
@@ -39,6 +41,8 @@ async function main() {
     }
 
     const rpcs = [
+	"https://mainnet.optimism.io",
+	"https://sepolia.optimism.io/",
         "https://polygon-rpc.com",
         "https://polygon-mumbai-bor.publicnode.com",
         "https://ethereum-goerli.publicnode.com",
@@ -51,14 +55,18 @@ async function main() {
     }
 
     let txReceipt;
-    if (process.argv[2] == "polygon")
+    if (process.argv[2] == "optimism")
         txReceipt = await updateMetadata(rpcs[0], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "mumbai")
-        txReceipt = await updateMetadata(rpcs[1], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "goerli")
+    else if (process.argv[2] == "polygon-sepolia")
+        txReceipt = await updateMetadata(rpcs[1], process.argv[3], process.argv[4]);    
+    else if (process.argv[2] == "polygon")
         txReceipt = await updateMetadata(rpcs[2], process.argv[3], process.argv[4]);
-    else if (process.argv[2] == "local")
+    else if (process.argv[2] == "mumbai")
         txReceipt = await updateMetadata(rpcs[3], process.argv[3], process.argv[4]);
+    else if (process.argv[2] == "goerli")
+        txReceipt = await updateMetadata(rpcs[4], process.argv[3], process.argv[4]);
+    else if (process.argv[2] == "local")
+        txReceipt = await updateMetadata(rpcs[5], process.argv[3], process.argv[4]);
     else {
         printHelp();
         return;
