@@ -89,6 +89,11 @@ node withPaper/registerContractInPaper.js <NETWORK> <CONTRACT ADDRESS>
 # Create a checkout (mint) link
 cd script/nodejs
 node withPaper/createPaperCheckoutLink.js <PAPER_CONTRACT_ID> <CURRENCY>
+
+# Create a mint batch
+cd script/nodejs/contract
+node mintBatch.js <NETWORK> <CONTRACT ADDRESS> address.txt
+
 ```
 
 

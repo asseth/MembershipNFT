@@ -15,3 +15,6 @@ docs/
 
 # js projects
 node_modules/
+
+# script
+script/nodejs/contract/address.txt
